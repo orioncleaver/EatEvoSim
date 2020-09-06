@@ -7,11 +7,19 @@ const NeuralBrain = function(inW, outW) {
     this.hiddenN = 3;
     this.outputN = 8;
 
+    /**
+     * Initialize weights of neural network with random values.
+     */
     this.init = function() {
         this.inputW = tf.randomNormal([this.inputN, this.hiddenN]);
         this.outputW = tf.randomNormal([this.hiddenN, this.outputN]);
     }
 
+    /**
+     * Uses features of current state to predict next move through feedforward algorithm.
+     * @param  {Array.<Number>} features World features of length this.inputN
+     * @return {Number} Direction to move.
+     */
     this.predict = function(features) {
         const inputs = features.concat([1.0]);
         let output;
@@ -24,6 +32,11 @@ const NeuralBrain = function(inW, outW) {
         return tf.argMax(output).dataSync()[0];
     }
 
+    /**
+     * Crosses the weights of two NeuralBrains layer by layer to produce two offspring.
+     * @param  {Brain} other The other NeuralBrain.
+     * @return {Array.<Brain>} Two new NeuralBrains.
+     */
     this.crossover = function(other) {
         let child1Brain, child2Brain;
 
@@ -41,6 +54,9 @@ const NeuralBrain = function(inW, outW) {
         return [child1Brain, child2Brain];
     }
 
+    /**
+     * Crosses the values of two layers of a neural network.
+     */
     this.crossoverLayers = function(tensor1, tensor2) {
         const t1 = tensor1.dataSync();
         const t2 = tensor2.dataSync();
@@ -63,7 +79,9 @@ const NeuralBrain = function(inW, outW) {
         return [result1, result2];
     }
 
-    /*crossover event*/
+    /**
+     * Crossover event.
+     */
     this.onePoint = function(layer1, layer2) {
         let result = [];
 
@@ -75,7 +93,9 @@ const NeuralBrain = function(inW, outW) {
         return result;
     }
     
-    /*crossover event*/
+    /**
+     * Crossover event.
+     */
     this.twoPoint = function(layer1, layer2, length) {
         let result = [];
     
@@ -88,7 +108,10 @@ const NeuralBrain = function(inW, outW) {
         result = result.concat(layer1.slice(second));
         return result;
     }
-    
+
+    /**
+     * Mutates each layer of the neural network.
+     */
     this.mutate = function() {
         this.inputW = this.mutateLayer(this.inputW);
         this.outputW = this.mutateLayer(this.outputW);
@@ -127,6 +150,10 @@ const NeuralBrain = function(inW, outW) {
         return tf.tensor2d(newDNA, layer.shape);
     }
 
+    /**
+     * Creates a copy of this NeuralBrain.
+     * @return {NeuralBrain} New NeuralBrain with same weights as this.
+     */
     this.copy = function() {
         const copy = new NeuralBrain(this.inputN, this.hiddenN, this.outputN);
         copy.inputW = tf.clone(this.inputW);

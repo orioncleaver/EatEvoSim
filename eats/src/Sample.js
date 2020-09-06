@@ -16,6 +16,9 @@ var Sample = function(startPos, isRecessive) {
     /*inputs for neural model*/
     this.eyes = [8];
 
+    /**
+     * Initialize the brain based on config.
+     */
     this.newBrain = function() {
         if (this.brainType == config.states.LINEAR) {
             this.brain = new Brain();
@@ -25,6 +28,11 @@ var Sample = function(startPos, isRecessive) {
             this.brain.init();
         }
     }
+
+    /**
+     * Calculates features and updates position and fitness.
+     * @param  {Array} targets List of coordinates where food is located.
+     */
     this.update = function(targets) {
         if (!this.running) return;
         // set features based on brain type
@@ -85,6 +93,10 @@ var Sample = function(startPos, isRecessive) {
         if (!this.isSafe()) this.die();
         this.fitness += 10 * numAte;
     }
+
+    /**
+     * Draws cell on screen.
+     */
     this.draw = function() {
         if (!this.running) return;
         if (this.isRecessive) {
@@ -110,6 +122,11 @@ var Sample = function(startPos, isRecessive) {
         
         ellipse(gridCorrected(this.x), gridCorrected(this.y), 15, 15);
     }
+
+    /**
+     * Eats any food at current position, replaces it with a new food.
+     * @return  {Number} The amount of food eaten.
+     */
     this.eat = function(targets) {
         if (!this.running) return 0;
         let numAte = 0;
@@ -123,14 +140,28 @@ var Sample = function(startPos, isRecessive) {
         this.timesAte += numAte;
         return numAte;
     }
+
+    /**
+     * Sets running to false, which will stop update and draw methods from running.
+     */
     this.die = function() {
         if (this.running) {
             this.running = false;
         }
-    }    
+    }
+
+    /**
+     * Checks if position is within the grid.
+     * @return {Boolean} True if position within grid, else False
+     */
     this.isSafe = function () {
         return !(this.x > this.gridSize || this.x < 1 || this.y > this.gridSize || this.y < 1);
     }
+
+    /**
+     * Updates fitness based on proximity to food.
+     * @param  {Array} targets List of coordinates where food is located.
+     */
     this.checkEndFitness = function(targets) {
         let foodFitness = 0;
 
@@ -154,6 +185,11 @@ var Sample = function(startPos, isRecessive) {
             this.brain.adjustDominance();
         }
     }
+
+    /**
+     * Crosses this Sample with another to produce two new Samples.
+     * @param  {Sample} other The other Sample.
+     */
     this.crossover = function(other) {
         let child1 = new Sample(this.startPos, false);
         let child2 = new Sample(this.startPos, true);
@@ -164,9 +200,18 @@ var Sample = function(startPos, isRecessive) {
         
         return [child1, child2];
     }
+
+    /**
+     * Mutates the brain.
+     */
     this.mutate = function() {
         this.brain.mutate();
     }
+
+    /**
+     * Sets the features by looking for food.
+     * @param  {Array} targets List of coordinates where food is located.
+     */
     this.lookAround = function(targets) {
         const size = 1;
         const distance = 5;

@@ -8,6 +8,9 @@ let showEvolution;
 
 let gridSize;
 
+/**
+ * Initialize the genetic algorithm
+ */
 function setup() {
     createCanvas(config.canvasSize, config.canvasSize);
     showEvolution = true;
@@ -60,6 +63,9 @@ function setup() {
     });
 }
 
+/**
+ * Runs and draws one step of the genetic algorithm
+ */
 function run() {
     ga.step(foods);
 
@@ -70,6 +76,9 @@ function run() {
     }
 }
 
+/**
+ * Draws the environment and samples to screen.
+ */
 function draw() {
     drawMap();
     if (showEvolution) {
@@ -79,17 +88,29 @@ function draw() {
     noLoop();
 }
 
+/**
+ * Corrects a value to the grid on screen.
+ * @param  {Number} x The col/row number to be corrected to.
+ * @return {Number} The actual pixel location of the col/row.
+ */
 function gridCorrected(x) {
     const meter = (config.canvasSize - 2 * config.offset) / (gridSize + 1);
     return config.offset + x*(meter);
 }
 
+/**
+ * Provides coordinates for a new food.
+ * @return {Array.<Number>} Coordinates of new food.
+ */
 function spawnFood() {
     const x = Math.floor(random(1, gridSize - 1));
     const y = Math.floor(random(1, gridSize - 1));
     return [x, y];
 }
 
+/**
+ * Draws the grid, food, and information about the current state.
+ */
 function drawMap() {
     clear();
     background(255);
