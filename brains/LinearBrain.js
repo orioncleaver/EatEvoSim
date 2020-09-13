@@ -61,7 +61,7 @@ const Brain = function() {
     this.mutate = function() {
         //bit-wise adjustments
         for (let i = 0; i < this.DNA.length; i++) {
-            const odds = int(random(0,600));
+            const odds = int(random(0,160));
             if (odds == 1) {
                 this.DNA[i][0] = int(random(0,9));
                 this.DNA[i][2] = random(0,1);

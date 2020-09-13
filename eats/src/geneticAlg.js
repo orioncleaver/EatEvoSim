@@ -43,16 +43,13 @@ const geneticAlg = function(population, populationSize, maxSteps, startPosition,
         this.printGenInfo(totalFitness);
 
         //select parent pool
-        let parentPool = [];
-        if (this.brainType == config.states.LINEAR || this.brainType == config.states.TFNEURAL) {
-            parentPool = this.selectionWheel();
-        }
+        const parentPool = this.selectionWheel();
         
         //generate new population
         this.samples = [];
         if (parentPool.length > 0) {
             for (let i = 0; i < this.sampleSize / 2; i++) {
-                let children = this.mate(random(parentPool), random(parentPool));
+                const children = this.mate(random(parentPool), random(parentPool));
                 children.forEach((c) => {
                     c.parentFitness = c.fitness;
                     this.samples.push(c);

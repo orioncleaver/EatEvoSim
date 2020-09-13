@@ -22,10 +22,8 @@ var Sample = function(startPos, isRecessive) {
     this.newBrain = function() {
         if (this.brainType == config.states.LINEAR) {
             this.brain = new Brain();
-            this.brain.init(this.maxSteps);
         } else if (this.brainType = config.states.TFNEURAL) {
-            this.brain = new NeuralBrain();
-            this.brain.init();
+            this.brain = new NeuralBrain(null, null, 9, 4, 8);
         }
     }
 
@@ -45,7 +43,7 @@ var Sample = function(startPos, isRecessive) {
         }
 
         // take step (make control const)
-        let control = this.brain.predict(features);
+        let control = this.brain.predictMax(features);
         if (this.brainType = config.states.TFNEURAL) {
             control++;
         }
